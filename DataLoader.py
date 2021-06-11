@@ -32,6 +32,10 @@ def read_images(images_file):
     n_rows = struct.unpack('>i', n_rows_32bit)[0]
     n_cols = struct.unpack('>i', n_cols_32bit)[0]
 
+    # Read the entire file as a stream of bytes
+    # The innermost for loop chops off the bytestream at the end of each column of the image
+    # The middle for loop chops off the bytestream at the end of each row of the image
+    # The outermost for loop chops off the bytestream at the end of each image
     try:
         for i in range(n_images):
             image = []
