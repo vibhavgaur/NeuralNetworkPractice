@@ -4,5 +4,6 @@ Following Michael Nielsen's amazingly accessible (and free) online book *[Neural
 
 I will be writing a neural network classifier for the [MNIST data set](http://yann.lecun.com/exdb/mnist/).
 
-- [x] Created a decoder class for the MNIST dataset files (`DataLoader.py`).
-    - The dataset files are in a particular binary format (described on their website). In order to read the images you have to read the bytes in order with different offsets as specified by the website. Read the `DataLoader.py` code for more information on how to do this. 
+Here is a [blog post]() about decoding the MNIST dataset.
+Here is a [blog post]() about this project.
+
