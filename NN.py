@@ -1,5 +1,6 @@
 import numpy as np
 import pdb
+import random
 
 class Network:
     # Class definition of a Network object which represents a neural network
@@ -28,6 +29,31 @@ class Network:
         for w, b in zip(self.weights, self.biases):
             a = sigmoid(np.dot(w, a) + b)
         return a
+
+    def SGD(self, training_data, n_epochs, mini_batch_size, eta, test_data=None):
+        #
+        n = len(training_data)
+        
+        # for each epoch that we want to train for
+        for nth_epoch in range(n_epochs):
+            # shuffle the training data and create mini batches
+            random.shuffle(training_data)
+            # create mini batches by indexing into the training data
+            # the indexes are from 0 to n with mini_batch_size steps
+            # and each mini_batch_size'd chunk is one mini batch
+            mini_batches = [
+                    training_data[k:k+mini_batch_size] for k in range(0, n, mini_batch_size)] 
+            # now, for each mini batch, do the update step using the update_mini_batch function
+            for mini_batch in mini_batches:
+                self.update_mini_batch(mini_batch, eta)
+
+            # if test data is provided
+            if test_data:
+                n_test = len(test_data)
+                # print the training status
+                print("Epoch ", nth_epoch, ": ", self.evaluate(test_data), "/", n_test)
+            else:
+                print("Epoch ", nth_epoch, " completed.")
 
     def update_mini_batch(self, mini_batch, eta):
         # update the network's weights and biases by calculating the gradient using
@@ -68,17 +94,28 @@ class Network:
         for w, b in zip(self.weights, self.biases):
             z = np.dot(w, activation) + b
             zs.append(z)
+            # new activation is the sigmoid of the calculated input
             activation = sigmoid(z)
-            activations.append(activation)
+            activations.append(activation)  # add a vector to the list
 
         # backward pass
+        
 
         # return the partial derivatives
         return nabla_w, nabla_b
 
+    def evaluate(self, test_data):
+        # return the number of digits that were correctly classified
 
+        # the output of the neural network is the max value of activation in the final layer
+        test_results = [(np.argmax(self.feedforward(x)), y) for (x, y) in test_data]
+        # count the number of times in test_results that the computed value is equal to the
+        # label
+        return sum(int(x == y) for (x, y) in test_results)
+
+# misc helper functions
 def sigmoid(z):
-    return 1.0 / (1.0 + np.exp(-z))
+        return 1.0 / (1.0 + np.exp(-z))
 def sigmoid_prime(z):       # derivative of the sigmoid function
     return sigmoid(z)*(1 - sigmoid(z))
 def cost_derivative(self, output_activations, y):
